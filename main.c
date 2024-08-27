@@ -22,13 +22,15 @@ void decimalPBinario(int num) {
 }
 
 void decimalPBinarioComplementoA2(int num) {
-    printf("\nConversão de decimal para binário:\n");
+    printf("\nConversão de decimal para binário em complemento de 2:\n");
     int binario[16];
     int i = 0;
     
 
     if(num < 0){
         num = abs(num);
+
+        printf("\n- Calculando a representação binária do valor absoluto:\n");
         while (num > 0) {
             binario[i] = num % 2;
             printf("%d / 2 = %d, Resto = %d\n", num, num / 2, binario[i]);
@@ -40,23 +42,34 @@ void decimalPBinarioComplementoA2(int num) {
             binario[j] = 0;
         }
 
+        printf("\n- Representação binária do valor absoluto:\n");
+        for (int j = 15; j >= 0; j--) {
+            printf("%d", binario[j]);
+        }
+        printf("\n");
+
+        printf("\n- Invertendo os bits a partir do 1° '1' (macete):\n");
         int trocador = 0;
         for (int j = 0; j <= 15; j++) {
             if (binario[j] == 1 && trocador == 0){
                 trocador = 1;
+                printf("\n- Encontrado o primeiro 1, trocador ativado, pulando o próximo bit.\n");
                 j++;
             }
             if(trocador == 1){
                 if(binario[j] == 0){
                     binario[j] = 1;
+                    printf("   Binário[%d] = 0, trocando para 1\n", j);
                 }
                 else if(binario[j] == 1){
                     binario[j] = 0;
+                    printf("   Binário[%d] = 1, trocando para 0\n", j);
+
                 }
             }
         }
 
-        printf("Resultado em binário: ");
+        printf("\nResultado em binário: ");
         for (int j = 15; j >= 0; j--) {
             printf("%d", binario[j]);
         }
