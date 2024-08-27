@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 // Função decimal para binário
 void decimalPBinario(int num) {
@@ -18,6 +19,67 @@ void decimalPBinario(int num) {
         printf("%d", binario[j]);
     }
     printf("\n");
+}
+
+void decimalPBinarioComplementoA2(int num) {
+    printf("\nConversão de decimal para binário:\n");
+    int binario[16];
+    int i = 0;
+    
+
+    if(num < 0){
+        num = abs(num);
+        while (num > 0) {
+            binario[i] = num % 2;
+            printf("%d / 2 = %d, Resto = %d\n", num, num / 2, binario[i]);
+            num = num / 2;
+            i++;
+        }
+
+        for (int j = 15; j >= i; j--) {
+            binario[j] = 0;
+        }
+
+        int trocador = 0;
+        for (int j = 0; j <= 15; j++) {
+            if (binario[j] == 1 && trocador == 0){
+                trocador = 1;
+                j++;
+            }
+            if(trocador == 1){
+                if(binario[j] == 0){
+                    binario[j] = 1;
+                }
+                else if(binario[j] == 1){
+                    binario[j] = 0;
+                }
+            }
+        }
+
+        printf("Resultado em binário: ");
+        for (int j = 15; j >= 0; j--) {
+            printf("%d", binario[j]);
+        }
+        printf("\n");
+    }else{
+        while (num > 0) {
+            binario[i] = num % 2;
+            printf("%d / 2 = %d, Resto = %d\n", num, num / 2, binario[i]);
+            num = num / 2;
+            i++;
+        }
+
+        for (int j = 15; j >= i; j--) {
+            binario[j] = 0;
+        }
+        
+        printf("Resultado em binário: ");
+        for (int j = 15; j >= 0; j--) {
+            printf("%d", binario[j]);
+        }
+        printf("\n");
+    }
+    
 }
 
 // Função decimal para octal
@@ -118,13 +180,14 @@ int main(void) {
   printf("*  2. Conversão de Decimal para Octal             *\n");
   printf("*  3. Conversão de Decimal para Hexadecimal       *\n");
   printf("*  4. Conversão de Decimal para Código BCD        *\n");
-  printf("*  5. Sair                                        *\n");
+  printf("*  5. Conversão de Decimal com Complemento A2 16b *\n");
+  printf("*  6. Sair                                        *\n");
   printf("*                                                 *\n");
   printf("***************************************************\n");
   int opcao = 0;
-  
-  while(opcao != 5){
-    printf("\nEscolha uma opção (1-5): ");
+    
+  while(opcao != 6){
+    printf("\nEscolha uma opção (1-6): ");
 
     int decimal;
     scanf("%d", &opcao);
@@ -149,7 +212,12 @@ int main(void) {
       scanf("%d", &decimal);
           decimalPBCD(decimal);
     }
-    else if (opcao == 5){
+    else if(opcao == 5){
+      printf("\nDigite um número Decimal para converter em Complemento A2 com 16 bits: ");
+      scanf("%d", &decimal);
+        decimalPBinarioComplementoA2(decimal);
+    }
+    else if (opcao == 6){
       printf("\nSaindo da calculadora...\n");
       break;
     }
