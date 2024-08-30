@@ -1,3 +1,20 @@
+/*
+Autor: [Arthur silva Capistrano]
+Email: [asc@cesar.school]
+Data de criação: [25/08/2024]
+Última modificação: [30/08/2024]
+
+Descrição:
+Este código é uma calculadora didática em operações de conversões binárias.
+
+Revisões:
+- [1° Questão x 25/08/2024 x 17h] - Implementação inicial. Criação e realização da 1° questão.
+- [2° Questão x 25/08/2024 x 18h] - Resolução da 2° questão.
+- [2° Questão x 25/08/2024 x 18h] - Transformando 2° questão em didática.
+- [3° Questão x 30/08/2024 x 18h] - Resolução da 3° questão.
+- [3° Questão x 30/08/2024 x 18h] - Transformando 3° questão em didática.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h> 
