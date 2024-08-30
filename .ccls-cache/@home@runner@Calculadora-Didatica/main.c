@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h> 
 
 // Função decimal para binário
 void decimalPBinario(int num) {
@@ -184,6 +185,117 @@ void decimalPBCD(int numero) {
     printf("\n");
 }
 
+void transformarFloatEDouble(double num) {
+    int sinal;
+    int binOrganizado[32];
+
+    // Determinando o sinal
+    if (num >= 0) {
+        sinal = 0;
+    } else {
+        sinal = 1;
+        num = fabs(num);
+    }
+    printf("Sinal: %d\n", sinal);
+
+    // Separando a parte inteira e fracionária
+    int intpart = (int)num;
+    double decpart = num - intpart;
+
+    int binario[32] = {0}; 
+    int frac[23] = {0}; 
+    int i = 0;
+    int m = 0;
+
+    // Convertendo a parte inteira para binário
+    printf("Parte inteira: %d\n", intpart);
+    while (intpart > 0) {
+        binario[i] = intpart % 2;
+        intpart = intpart / 2;
+        i++;
+    }
+
+    printf("Parte inteira em binário: ");
+    for (int j = i - 1; j >= 0; j--) {
+        printf("%d", binario[j]);
+    }
+    printf("\n");
+
+    // Convertendo a parte fracionária para binário
+    printf("Parte fracionária: %.15f\n", decpart);
+    while (m < 23 && decpart != 0.0) {
+        decpart *= 2;
+        frac[m] = (int)decpart;
+        decpart -= frac[m];
+        m++;
+    }
+
+    printf("Parte fracionária em binário: ");
+    for (int j = 0; j < m; j++) {
+        printf("%d", frac[j]);
+    }
+    printf("\n");
+
+    // Organizando a parte inteira e fracionária
+    int InteiroBin[32] = {0};
+    for (int j = i - 2, cont = 0; j >= 0; j--, cont++) {
+        InteiroBin[cont] = binario[j];
+    }
+
+    int contPSomaDoFloat = i - 1;
+
+    int fracOrganizado[23] = {0};
+    for (int j = 0; j < m; j++) {
+        fracOrganizado[j] = frac[j];
+    }
+
+    // Calculando o expoente
+    int expoente = 127 + contPSomaDoFloat;
+    printf("Expoente (decimal): %d\n", expoente);
+
+    int expoenteBin[8] = {0};
+    int n = 0;
+    while (expoente > 0) {
+        expoenteBin[n] = expoente % 2;
+        expoente = expoente / 2;
+        n++;
+    }
+
+    printf("Expoente em binário: ");
+    for (int j = 7; j >= 0; j--) {
+        printf("%d", expoenteBin[j]);
+    }
+    printf("\n");
+
+    // Organizando o expoente
+    int expoenteBinCorreto[8] = {0};
+    for (int j = 7, contExpoente = 0; j >= 0; j--, contExpoente++) {
+        expoenteBinCorreto[contExpoente] = expoenteBin[j];
+    }
+
+    // Montando o resultado final
+    int resultado[32] = {0};
+    resultado[0] = sinal;
+
+    for (int j = 0; j < 8; j++) {
+        resultado[j + 1] = expoenteBinCorreto[j];
+    }
+
+    for (int j = 0; j < contPSomaDoFloat; j++) {
+        resultado[j + 9] = InteiroBin[j];
+    }
+
+    for (int j = 0; j < 23 - contPSomaDoFloat; j++) {
+        resultado[j + 9 + contPSomaDoFloat] = fracOrganizado[j];
+    }
+
+    printf("\nResultado final em binário: ");
+    for (int j = 0; j < 32; j++) {
+        printf("%d", resultado[j]);
+    }
+    printf("\n");
+}
+
 int main(void) {
 
   printf("***************************************************\n");
@@ -194,13 +306,15 @@ int main(void) {
   printf("*  3. Conversão de Decimal para Hexadecimal       *\n");
   printf("*  4. Conversão de Decimal para Código BCD        *\n");
   printf("*  5. Conversão de Decimal com Complemento A2 16b *\n");
-  printf("*  6. Sair                                        *\n");
+  printf("*  6. Converter para Float e Double               *\n");
+  printf("*  7. Sair                                        *\n");
   printf("*                                                 *\n");
   printf("***************************************************\n");
   int opcao = 0;
+
     
   while(opcao != 6){
-    printf("\nEscolha uma opção (1-6): ");
+    printf("\nEscolha uma opção (1-7): ");
 
     int decimal;
     scanf("%d", &opcao);
@@ -230,7 +344,12 @@ int main(void) {
       scanf("%d", &decimal);
         decimalPBinarioComplementoA2(decimal);
     }
-    else if (opcao == 6){
+    else if(opcao == 6){
+      printf("\nDigite um número para converter em Float e Double: ");
+      scanf("%d", &decimal);
+        transformarFloatEDouble(decimal);
+    }
+    else if (opcao == 7){
       printf("\nSaindo da calculadora...\n");
       break;
     }
