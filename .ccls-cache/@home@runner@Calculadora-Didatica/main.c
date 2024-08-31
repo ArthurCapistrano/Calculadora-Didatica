@@ -13,6 +13,7 @@ Revisões:
 - [2° Questão x 25/08/2024 x 18h] - Transformando 2° questão em didática.
 - [3° Questão x 30/08/2024 x 18h] - Resolução da 3° questão.
 - [3° Questão x 30/08/2024 x 18h] - Transformando 3° questão em didática.
+- [3° Questão x 30/08/2024 x 22h] - Adicionando parte para Double.
 */
 
 #include <stdio.h>
@@ -202,7 +203,7 @@ void decimalPBCD(int numero) {
     printf("\n");
 }
 
-void transformarFloatEDouble(double num) {
+void transformarFloat(double num) {
     int sinal;
     int binOrganizado[32];
 
@@ -313,6 +314,117 @@ void transformarFloatEDouble(double num) {
     printf("\n");
 }
 
+void transformarDouble(double num) {
+    int sinal;
+    int binOrganizado[64];
+
+    // Determinando o sinal
+    if (num >= 0) {
+        sinal = 0;
+    } else {
+        sinal = 1;
+        num = fabs(num);
+    }
+    printf("Sinal: %d\n", sinal);
+
+    // Separando a parte inteira e fracionária
+    long long int intpart = (long long int)num;
+    double decpart = num - intpart;
+
+    int binario[64] = {0}; 
+    int frac[52] = {0}; 
+    int i = 0;
+    int m = 0;
+
+    // Convertendo a parte inteira para binário
+    printf("Parte inteira: %lld\n", intpart);
+    while (intpart > 0) {
+        binario[i] = intpart % 2;
+        intpart = intpart / 2;
+        i++;
+    }
+
+    printf("Parte inteira em binário: ");
+    for (int j = i - 1; j >= 0; j--) {
+        printf("%d", binario[j]);
+    }
+    printf("\n");
+
+    // Convertendo a parte fracionária para binário
+    printf("Parte fracionária: %.15f\n", decpart);
+    while (m < 52 && decpart != 0.0) {
+        decpart *= 2;
+        frac[m] = (int)decpart;
+        decpart -= frac[m];
+        m++;
+    }
+
+    printf("Parte fracionária em binário: ");
+    for (int j = 0; j < m; j++) {
+        printf("%d", frac[j]);
+    }
+    printf("\n");
+
+    // Organizando a parte inteira e fracionária
+    int InteiroBin[64] = {0};
+    for (int j = i - 2, cont = 0; j >= 0; j--, cont++) {
+        InteiroBin[cont] = binario[j];
+    }
+
+    int contPSomaDoFloat = i - 1;
+
+    int fracOrganizado[52] = {0};
+    for (int j = 0; j < m; j++) {
+        fracOrganizado[j] = frac[j];
+    }
+
+    // Calculando o expoente
+    int expoente = 1023 + contPSomaDoFloat;  // Bias de 1023 para double
+    printf("Expoente (decimal): %d\n", expoente);
+
+    int expoenteBin[11] = {0};
+    int n = 0;
+    while (expoente > 0) {
+        expoenteBin[n] = expoente % 2;
+        expoente = expoente / 2;
+        n++;
+    }
+
+    printf("Expoente em binário: ");
+    for (int j = 10; j >= 0; j--) {
+        printf("%d", expoenteBin[j]);
+    }
+    printf("\n");
+
+    // Organizando o expoente
+    int expoenteBinCorreto[11] = {0};
+    for (int j = 10, contExpoente = 0; j >= 0; j--, contExpoente++) {
+        expoenteBinCorreto[contExpoente] = expoenteBin[j];
+    }
+
+    // Montando o resultado final
+    int resultado[64] = {0};
+    resultado[0] = sinal;
+
+    for (int j = 0; j < 11; j++) {
+        resultado[j + 1] = expoenteBinCorreto[j];
+    }
+
+    for (int j = 0; j < contPSomaDoFloat && j < 52; j++) {
+        resultado[j + 12] = InteiroBin[j];
+    }
+
+    for (int j = 0; j < 52 - contPSomaDoFloat && j < 52; j++) {
+        resultado[j + 12 + contPSomaDoFloat] = fracOrganizado[j];
+    }
+
+    printf("\nResultado final em binário: ");
+    for (int j = 0; j < 64; j++) {
+        printf("%d", resultado[j]);
+    }
+    printf("\n");
+}
+
 int main(void) {
 
   printf("***************************************************\n");
@@ -364,7 +476,8 @@ int main(void) {
     else if(opcao == 6){
       printf("\nDigite um número para converter em Float e Double: ");
       scanf("%d", &decimal);
-        transformarFloatEDouble(decimal);
+        transformarFloat(decimal);
+        transformarDouble(decimal);
     }
     else if (opcao == 7){
       printf("\nSaindo da calculadora...\n");
